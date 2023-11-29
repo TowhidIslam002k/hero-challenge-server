@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("apple server is running")
+    res.send("Meals server is running")
 })
 
 
@@ -28,51 +28,132 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    const database = client.db("Elite-foods").collection("Foods");
     await client.connect();
+    const document = client.db("Elite-foods").collection("Foods");
+    const document2 = client.db("Elite-foods").collection("Category-icons");
+    const document3 = client.db("Elite-foods").collection("Populer-meals");
+    const document4 = client.db("Elite-foods").collection("Feature-meals");
+    const document5 = client.db("Elite-foods").collection("Cook-book");
+    const document6 = client.db("Elite-foods").collection("Ingredients");
+    const document7 = client.db("Elite-foods").collection("Dressing");
+    const document8 = client.db("Elite-foods").collection("Nutrition");
 
+    //Get Method Start_________________________
     app.get("/meals", async(req, res) => {
-        const result = await database.find().toArray();
+        const result = await document.find().toArray();
         res.send(result)
     })
 
     app.get("/meals/:id", async(req, res) => {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
-        const result = await database.findOne(query)
+        const result = await document.findOne(query)
         res.send(result)
     })
 
+    app.get("/cFoods", async(req, res) => {
+      const result = await document2.find().toArray();
+      res.send(result)
+    })
+
+    app.get("/populer", async(req, res) => {
+      const result = await document3.find().toArray();
+      res.send(result)
+    })
+
+    app.get("/populer/:id", async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await document3.findOne(query)
+      res.send(result)
+    })
+
+    app.get("/feature", async(req, res) => {
+      const result = await document4.find().toArray();
+      res.send(result)
+    })
+
+    app.get("/feature/:id", async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await document4.findOne(query);
+      res.send(result)
+    })
+    //Get Method End_________________________
+
+    // Post Method Start_________________________
     app.post("/meals", async(req, res) => {
-        const apple = req.body;
-        const result = await database.insertOne(apple);
+        const meals = req.body;
+        const result = await document.insertOne(meals);
         res.send(result);
     })
 
+    app.post("/populer", async(req,res) => {
+      const populer = req.body;
+      const result = await document3.insertOne(populer);
+      res.send(result)
+    })
+
+    app.post("/feature", async(req,res) => {
+      const feature = req.body;
+      const result = await document4.insertOne(feature);
+      res.send(result)
+    })
+
+    app.post("/cookbook", async(req,res) => {
+      const cookBook = req.body;
+      const result = await document5.insertOne(cookBook);
+      res.send(result)
+    })
+
+    app.post("/ingredients", async(req, res) => {
+      const ingredients = req.body;
+      const result = await document6.insertOne(ingredients);
+      res.send(result)
+    })
+
+    app.post("/dressing", async(req, res) => {
+      const dressing = req.body;
+      const result = await document7.insertOne(dressing);
+      res.send(result)
+    })
+
+    app.post("/Nutrition", async(req, res) => {
+      const nutrition = req.body;
+      const result = await document8.insertOne(nutrition);
+      res.send(result)
+    })
+    // Post Method End_________________________
+
+    // Put Method Start_________________________
     app.put("/meals/:id", async(req, res) => {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const options = {upsert: true}
-        const apple = req.body;
-        const updatedApple = {
+        const meals = req.body;
+        const updatedMeals= {
             $set: {
-                name: apple.name,
-                quantity: apple.quantity,
-                details: apple.details,
-                imageURL: apple.imageURL
+                name: meals.name,
+                quantity: meals.quantity,
+                details: meals.details,
+                imageURL: meals.imageURL
             }
         }
-        const result = await database.updateOne(query, updatedApple, options);
+        const result = await document.updateOne(query, updatedMeals, options);
         res.send(result);
     })
+    //Put Method End_________________________
 
+
+    //Delete Method Start_________________________
     app.delete("/meals/:id", async(req, res) => {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
-        const result = await database.deleteOne(query);
+        const result = await document.deleteOne(query);
         res.send(result);
     })
-    
+    // Delete Method End_________________________
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
