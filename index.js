@@ -5,14 +5,21 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const corsOptions = {
-  origin: 'http://localhost:5173', // Allow requests from this origin
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow cookies and credentials
-  optionsSuccessStatus: 204, // Respond with a 204 status for preflight requests
-};
+// const corsOptions = {
+//   origin: 'http://localhost:5173', // Allow requests from this origin
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true, // Allow cookies and credentials
+//   optionsSuccessStatus: 204, // Respond with a 204 status for preflight requests
+// };
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: [
+      'http://localhost:5173',
+      // 'https://cars-doctor-6c129.web.app',
+      // 'https://cars-doctor-6c129.firebaseapp.com'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {
