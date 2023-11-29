@@ -49,7 +49,7 @@ async function run() {
     const document4 = client.db("Elite-foods").collection("Feature-meals");
     const document5 = client.db("Elite-foods").collection("Cook-book");
     const document6 = client.db("Elite-foods").collection("Ingredients");
-    const document7 = client.db("Elite-foods").collection("Dressing");
+    const document7 = client.db("Elite-foods").collection("Category-meals");
     const document8 = client.db("Elite-foods").collection("Nutrition");
 
     //Get Method Start_________________________
@@ -93,6 +93,20 @@ async function run() {
       const result = await document4.findOne(query);
       res.send(result)
     })
+
+
+    app.get("/categoryMeals", async(req, res) => {
+      const result = await document7.find().toArray();
+      res.send(result)
+    })
+
+    app.get("/categoryMeals/:id", async(req, res) => {
+      const categoryId = req.params.id;
+      const result = await document7.find({ category_id: categoryId }).toArray();
+      res.send(result)
+    })
+
+    
     //Get Method End_________________________
 
     // Post Method Start_________________________
@@ -126,9 +140,9 @@ async function run() {
       res.send(result)
     })
 
-    app.post("/dressing", async(req, res) => {
-      const dressing = req.body;
-      const result = await document7.insertOne(dressing);
+    app.post("/categoryMeals", async(req, res) => {
+      const category = req.body;
+      const result = await document7.insertOne(category);
       res.send(result)
     })
 
