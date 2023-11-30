@@ -118,6 +118,13 @@ async function run() {
       res.send(result)
     })
 
+    app.get("/singlePublicMeals/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await document8.findOne(query);
+      res.send(result)
+    })
+
     //Get Method End_________________________
 
     // Post Method Start_________________________
