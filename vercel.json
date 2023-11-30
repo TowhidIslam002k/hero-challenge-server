@@ -12,7 +12,7 @@
       "dest": "/index.js",
       "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       "headers": {
-        "Access-Control-Allow-Origin": "https://hero-challenge3.web.app"
+        "Access-Control-Allow-Origin": ["https://hero-challenge3.web.app", "http://localhost:5173"]
       }
     }
   ]
