@@ -50,7 +50,7 @@ async function run() {
     const document5 = client.db("Elite-foods").collection("Cook-book");
     const document6 = client.db("Elite-foods").collection("Ingredients");
     const document7 = client.db("Elite-foods").collection("Category-meals");
-    const document8 = client.db("Elite-foods").collection("Nutrition");
+    const document8 = client.db("Elite-foods").collection("Public-post");
 
     //Get Method Start_________________________
     app.get("/meals", async(req, res) => {
@@ -94,6 +94,10 @@ async function run() {
       res.send(result)
     })
 
+    app.get("/cookbook", async(req, res) => {
+      const result = await document5.find().toArray();
+      res.send(result)
+    })
 
     app.get("/categoryMeals", async(req, res) => {
       const result = await document7.find().toArray();
@@ -106,10 +110,23 @@ async function run() {
       res.send(result)
     })
 
+    app.get("/singleCategoryMeals/:id", async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await document7.findOne(query);
+      res.send(result)
+    })
+
+
+    app.get("/public", async(req, res) => {
+      const result = await document8.find().toArray();
+      res.send(result)
+    })
     
     //Get Method End_________________________
 
     // Post Method Start_________________________
+    // I'm use this post method for uploading data on mongodb..............
     app.post("/meals", async(req, res) => {
         const meals = req.body;
         const result = await document.insertOne(meals);
@@ -146,11 +163,13 @@ async function run() {
       res.send(result)
     })
 
-    app.post("/Nutrition", async(req, res) => {
-      const nutrition = req.body;
-      const result = await document8.insertOne(nutrition);
+    //Public can add their meal items using this post 
+    app.post("/public", async(req, res) => {
+      const public = req.body;
+      const result = await document8.insertOne(public);
       res.send(result)
     })
+    
     // Post Method End_________________________
 
     // Put Method Start_________________________
