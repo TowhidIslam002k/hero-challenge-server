@@ -31,94 +31,162 @@ async function run() {
     const document4 = client.db("Elite-foods").collection("Feature-meals");
     const document7 = client.db("Elite-foods").collection("Category-meals");
     const document8 = client.db("Elite-foods").collection("Public-post");
+    const document9 = client.db("Elite-foods").collection("User-Contact-Data");
     // const document = client.db("Elite-foods").collection("Foods");
     // const document3 = client.db("Elite-foods").collection("Populer-meals");
     // const document5 = client.db("Elite-foods").collection("Cook-book");
     // const document6 = client.db("Elite-foods").collection("Ingredients");
 
     //Get Method Start_________________________
+
     app.get("/feature", async (req, res) => {
-      const result = await document4.find().toArray();
-      res.send(result)
-    })
+      try {
+        const result = await document4.find().toArray();
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+    });
 
     app.get("/onDemand", async (req, res) => {
-      const result = await document4.find({populerity:{$eq: 'ON-DEMAND'}}).toArray();
-      res.send(result)
-    })
+      try {
+        const result = await document4.find({ populerity: { $eq: 'ON-DEMAND' } }).toArray();
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+    });
 
     app.get("/cFoods", async (req, res) => {
-      const result = await document2.find().toArray();
-      res.send(result)
+      try {
+        const result = await document2.find().toArray();
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
-    
+
     app.get("/populer", async (req, res) => {
-      const result = await document4.find({populerity:{$eq: 'POPULAR'}}).toArray();
-      res.send(result)
+      try {
+        const result = await document4.find({ populerity: { $eq: 'POPULAR' } }).toArray();
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
 
     app.get("/meal/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await document4.findOne(query);
-      res.send(result)
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await document4.findOne(query);
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
 
     app.get("/categoryMeals", async (req, res) => {
-      const result = await document7.find().toArray();
-      res.send(result)
+      try {
+        const result = await document7.find().toArray();
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
 
     app.get("/categoryMeals/:id", async (req, res) => {
-      const categoryId = req.params.id;
-      const result = await document7.find({ category_id: categoryId }).toArray();
-      res.send(result)
+      try {
+        const categoryId = req.params.id;
+        const result = await document7.find({ category_id: categoryId }).toArray();
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
 
     app.get("/singleCategoryMeals/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await document7.findOne(query);
-      res.send(result)
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await document7.findOne(query);
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
 
 
     app.get("/public", async (req, res) => {
-      const result = await document8.find().toArray();
-      res.send(result)
+      try {
+        const result = await document8.find().toArray();
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
 
     app.get("/singlePublicMeals/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await document8.findOne(query);
-      res.send(result)
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await document8.findOne(query);
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
     //Get Method End_________________________
 
 
 
     // Post Method Start_________________________
-    
-    app.post("/feature", async (req, res) => {
-      const feature = req.body;
-      const result = await document4.insertOne(feature);
-      res.send(result)
-    })
 
-    app.post("/categoryMeals", async (req, res) => {
-      const category = req.body;
-      const result = await document7.insertOne(category);
-      res.send(result)
-    })
+    // app.post("/feature", async (req, res) => {
+    //   const feature = req.body;
+    //   const result = await document4.insertOne(feature);
+    //   res.send(result)
+    // })
+
+    // app.post("/categoryMeals", async (req, res) => {
+    //   const category = req.body;
+    //   const result = await document7.insertOne(category);
+    //   res.send(result)
+    // })
 
     //Public can add their meal items using this post method
     app.post("/public", async (req, res) => {
-      const public = req.body;
-      const result = await document8.insertOne(public);
-      res.send(result)
+      try {
+        const public = req.body;
+        const result = await document8.insertOne(public);
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
     })
-    
+
+    app.post("/contact", async(req, res) => {
+      try{
+        const contact = req.body;
+        const result = await document9.insertOne(contact);
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+    })
+
 
     // app.post("/meals", async (req, res) => {
     //   const meals = req.body;
