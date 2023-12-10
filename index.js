@@ -146,6 +146,29 @@ async function run() {
         res.status(500).send('Internal Server Error');
       }
     })
+
+
+
+    app.get("/myUpload", async (req, res) => {
+      try {
+        let query = {};
+        if(req.query?.uid){
+          query.uid = req.query.uid
+        }
+        
+        //sort method.....
+        let sortCriteria = {};
+        if (req.query?.sort) {
+          const parsedSort = JSON.parse(req.query.sort);
+          sortCriteria = parsedSort;
+        }
+        const result = await document8.find(query).sort(sortCriteria).toArray();
+        res.send(result)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+    })
     //Get Method End_________________________
 
 
@@ -176,8 +199,8 @@ async function run() {
       }
     })
 
-    app.post("/contact", async(req, res) => {
-      try{
+    app.post("/contact", async (req, res) => {
+      try {
         const contact = req.body;
         const result = await document9.insertOne(contact);
         res.send(result)
