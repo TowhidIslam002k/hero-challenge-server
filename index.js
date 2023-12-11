@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require('cors');
+const jwt = require('jsonwebtoken')
 require("dotenv").config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
@@ -152,10 +153,10 @@ async function run() {
     app.get("/myUpload", async (req, res) => {
       try {
         let query = {};
-        if(req.query?.uid){
+        if (req.query?.uid) {
           query.uid = req.query.uid
         }
-        
+
         //sort method.....
         let sortCriteria = {};
         if (req.query?.sort) {
@@ -174,6 +175,14 @@ async function run() {
 
 
     // Post Method Start_________________________
+
+    app.post("/jwt", (req, res) => {
+      const user = req.body;
+      console.log(user)
+      const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
+      console.log(token)
+      res.send({ token })
+    })
 
     // app.post("/feature", async (req, res) => {
     //   const feature = req.body;
@@ -238,33 +247,39 @@ async function run() {
 
     // Post Method End_________________________
 
-    // Put Method Start_________________________
-    // app.put("/meals/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: new ObjectId(id) }
-    //   const options = { upsert: true }
-    //   const meals = req.body;
-    //   const updatedMeals = {
-    //     $set: {
-    //       name: meals.name,
-    //       quantity: meals.quantity,
-    //       details: meals.details,
-    //       imageURL: meals.imageURL
-    //     }
-    //   }
-    //   const result = await document.updateOne(query, updatedMeals, options);
-    //   res.send(result);
-    // })
+    // Pacth Method Start_________________________
+    app.patch("/updateMeal/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const meals = req.body;
+      const updatedMeals = {
+        $set: {
+          title: meals.title,
+          description: meals.description,
+          duration: meals.duration,
+          price: meals.price,
+          recipeImage: meals.recipeImage,
+        }
+      }
+      const result = await document8.updateOne(query, updatedMeals);
+      res.send(result);
+    })
+
     //Put Method End_________________________
 
 
     //Delete Method Start_________________________
-    // app.delete("/meals/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: new ObjectId(id) }
-    //   const result = await document.deleteOne(query);
-    //   res.send(result);
-    // })
+    app.delete("/deleteMeal/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) }
+        const result = await document8.deleteOne(query);
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
+    })
     // Delete Method End_________________________
 
     // Send a ping to confirm a successful connection
