@@ -24,6 +24,22 @@ const client = new MongoClient(uri, {
   }
 });
 
+const verifyToken = (req, res, next) => {
+  try {
+    const authorization = req.headers.authorization;
+    console.log(authorization)
+    if (!authorization) return res.status(403).send({ error: true, message: 'No token privided.' })
+    const token = authorization.split(' ')[1];
+    jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
+      if (err) return res.status(403).send({ error: 1, message: "Failed to authenticate token." })
+      req.decode = decode;
+      next();
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -126,7 +142,7 @@ async function run() {
     })
 
 
-    app.get("/public", async (req, res) => {
+    app.get("/public", verifyToken, async (req, res) => {
       try {
         const result = await document8.find().toArray();
         res.send(result)
@@ -150,7 +166,7 @@ async function run() {
 
 
 
-    app.get("/myUpload", async (req, res) => {
+    app.get("/myUpload", verifyToken, async (req, res) => {
       try {
         let query = {};
         if (req.query?.uid) {
@@ -178,9 +194,7 @@ async function run() {
 
     app.post("/jwt", (req, res) => {
       const user = req.body;
-      console.log(user)
       const token = jwt.sign(user, process.env.SECRET_KEY, { expiresIn: '1h' });
-      console.log(token)
       res.send({ token })
     })
 
